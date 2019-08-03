@@ -1,0 +1,35 @@
+package org.h2.jdbc;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Properties;
+
+import org.h2.jdbcx.JdbcDataSource;
+
+public class JdbcDataSourceExt extends JdbcDataSource {
+
+    @Override
+    public Connection getConnection() throws SQLException {
+        return getJdbcConnection(getUser(), convertToCharArray(getPassword()));
+    }
+    
+    @Override
+    public Connection getConnection(String user, String password) throws SQLException {
+        return getJdbcConnection(user, convertToCharArray(password));
+    }
+    
+    private static char[] convertToCharArray(String s) {
+        return s == null ? null : s.toCharArray();
+    }
+    
+    private JdbcConnection getJdbcConnection(String user, char[] password) throws SQLException {
+        if (isDebugEnabled()) {
+            debugCode("getJdbcConnection("+quote(user)+", new char[0]);");
+        }
+        Properties info = new Properties();
+        info.setProperty("user", user);
+        info.put("password", password);
+        return new JdbcConnectionExt(getUrl(), info);
+    }
+    
+}
