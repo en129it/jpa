@@ -1,0 +1,1031 @@
+package org.h2.jdbc;
+
+import java.io.InputStream;
+import java.io.Reader;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Date;
+import java.sql.NClob;
+import java.sql.Ref;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.RowId;
+import java.sql.SQLException;
+import java.sql.SQLType;
+import java.sql.SQLWarning;
+import java.sql.SQLXML;
+import java.sql.Statement;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Map;
+
+import org.h2.result.ResultInterface;
+import org.h2.value.Value;
+
+public class JdbcResultSetExt implements ResultSet, JdbcResultSetBackwardsCompat {
+
+    private JdbcResultSet resultSet;
+    private int offset;
+    private ResultInterface resultSetProvider;
+    private int rowNumberCp;
+    
+    public JdbcResultSetExt(JdbcResultSet resultSet, int offset, ResultInterface resultSetProvider) {
+        this.resultSet = resultSet;
+        this.offset = offset;
+        this.resultSetProvider = resultSetProvider;
+    }
+
+    public int hashCode() {
+        return resultSet.hashCode();
+    }
+
+    public int getTraceId() {
+        return resultSet.getTraceId();
+    }
+
+    public String getTraceObjectName() {
+        return resultSet.getTraceObjectName();
+    }
+
+    public boolean equals(Object obj) {
+        return resultSet.equals(obj);
+    }
+
+    public boolean next() throws SQLException {
+        return resultSet.next();
+    }
+
+    public ResultSetMetaData getMetaData() throws SQLException {
+        return resultSet.getMetaData();
+    }
+
+    public boolean wasNull() throws SQLException {
+        return resultSet.wasNull();
+    }
+
+    public int findColumn(String columnLabel) throws SQLException {
+        return resultSet.findColumn(columnLabel);
+    }
+
+    public void close() throws SQLException {
+        resultSet.close();
+    }
+
+    public Statement getStatement() throws SQLException {
+        return resultSet.getStatement();
+    }
+
+    public SQLWarning getWarnings() throws SQLException {
+        return resultSet.getWarnings();
+    }
+
+    public void clearWarnings() throws SQLException {
+        resultSet.clearWarnings();
+    }
+
+    public String getString(int columnIndex) throws SQLException { 
+        before();
+        try {
+            return resultSet.getString(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public String getString(String columnLabel) throws SQLException {
+        return resultSet.getString(columnLabel);
+    }
+
+    public int getInt(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getInt(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public int getInt(String columnLabel) throws SQLException {
+        return resultSet.getInt(columnLabel);
+    }
+
+    public BigDecimal getBigDecimal(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getBigDecimal(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public Date getDate(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getDate(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public Time getTime(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getTime(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public Timestamp getTimestamp(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getTimestamp(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public BigDecimal getBigDecimal(String columnLabel) throws SQLException {
+        return resultSet.getBigDecimal(columnLabel);
+    }
+
+    public Date getDate(String columnLabel) throws SQLException {
+        return resultSet.getDate(columnLabel);
+    }
+
+    public Time getTime(String columnLabel) throws SQLException {
+        return resultSet.getTime(columnLabel);
+    }
+
+    public Timestamp getTimestamp(String columnLabel) throws SQLException {
+        return resultSet.getTimestamp(columnLabel);
+    }
+
+    public Object getObject(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getObject(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public Object getObject(String columnLabel) throws SQLException {
+        return resultSet.getObject(columnLabel);
+    }
+
+    public boolean getBoolean(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getBoolean(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public boolean getBoolean(String columnLabel) throws SQLException {
+        return resultSet.getBoolean(columnLabel);
+    }
+
+    public byte getByte(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getByte(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public byte getByte(String columnLabel) throws SQLException {
+        return resultSet.getByte(columnLabel);
+    }
+
+    public short getShort(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getShort(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public short getShort(String columnLabel) throws SQLException {
+        return resultSet.getShort(columnLabel);
+    }
+
+    public long getLong(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getLong(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public long getLong(String columnLabel) throws SQLException {
+        return resultSet.getLong(columnLabel);
+    }
+
+    public float getFloat(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getFloat(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public float getFloat(String columnLabel) throws SQLException {
+        return resultSet.getFloat(columnLabel);
+    }
+
+    public double getDouble(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getDouble(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public double getDouble(String columnLabel) throws SQLException {
+        return resultSet.getDouble(columnLabel);
+    }
+
+    public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
+        return resultSet.getBigDecimal(columnLabel, scale);
+    }
+
+    public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
+        before();
+        try {
+            return resultSet.getBigDecimal(columnIndex - offset, scale);
+        } finally {
+            after();
+        }
+    }
+
+    public InputStream getUnicodeStream(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getUnicodeStream(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public InputStream getUnicodeStream(String columnLabel) throws SQLException {
+        return resultSet.getUnicodeStream(columnLabel);
+    }
+
+    public Object getObject(int columnIndex, Map<String, Class<?>> map) throws SQLException {
+        before();
+        try {
+            return resultSet.getObject(columnIndex - offset, map);
+        } finally {
+            after();
+        }
+    }
+
+    public Object getObject(String columnLabel, Map<String, Class<?>> map) throws SQLException {
+        return resultSet.getObject(columnLabel, map);
+    }
+
+    public Ref getRef(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getRef(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public Ref getRef(String columnLabel) throws SQLException {
+        return resultSet.getRef(columnLabel);
+    }
+
+    public Date getDate(int columnIndex, Calendar calendar) throws SQLException {
+        before();
+        try {
+            return resultSet.getDate(columnIndex - offset, calendar);
+        } finally {
+            after();
+        }
+    }
+
+    public Date getDate(String columnLabel, Calendar calendar) throws SQLException {
+        return resultSet.getDate(columnLabel, calendar);
+    }
+
+    public Time getTime(int columnIndex, Calendar calendar) throws SQLException {
+        before();
+        try {
+            return resultSet.getTime(columnIndex - offset, calendar);
+        } finally {
+            after();
+        }
+    }
+
+    public Time getTime(String columnLabel, Calendar calendar) throws SQLException {
+        return resultSet.getTime(columnLabel, calendar);
+    }
+
+    public Timestamp getTimestamp(int columnIndex, Calendar calendar) throws SQLException {
+        before();
+        try {
+            return resultSet.getTimestamp(columnIndex - offset, calendar);
+        } finally {
+            after();
+        }
+    }
+
+    public Timestamp getTimestamp(String columnLabel, Calendar calendar) throws SQLException {
+        return resultSet.getTimestamp(columnLabel, calendar);
+    }
+
+    public Blob getBlob(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getBlob(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public Blob getBlob(String columnLabel) throws SQLException {
+        return resultSet.getBlob(columnLabel);
+    }
+
+    public byte[] getBytes(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getBytes(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public byte[] getBytes(String columnLabel) throws SQLException {
+        return resultSet.getBytes(columnLabel);
+    }
+
+    public InputStream getBinaryStream(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getBinaryStream(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public InputStream getBinaryStream(String columnLabel) throws SQLException {
+        return resultSet.getBinaryStream(columnLabel);
+    }
+
+    public Clob getClob(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getClob(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public Clob getClob(String columnLabel) throws SQLException {
+        return resultSet.getClob(columnLabel);
+    }
+
+    public Array getArray(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getArray(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public Array getArray(String columnLabel) throws SQLException {
+        return resultSet.getArray(columnLabel);
+    }
+
+    public InputStream getAsciiStream(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getAsciiStream(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public InputStream getAsciiStream(String columnLabel) throws SQLException {
+        return resultSet.getAsciiStream(columnLabel);
+    }
+
+    public Reader getCharacterStream(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getCharacterStream(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public Reader getCharacterStream(String columnLabel) throws SQLException {
+        return resultSet.getCharacterStream(columnLabel);
+    }
+
+    public URL getURL(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getURL(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public URL getURL(String columnLabel) throws SQLException {
+        return resultSet.getURL(columnLabel);
+    }
+
+    public void updateNull(int columnIndex) throws SQLException {
+        resultSet.updateNull(columnIndex);
+    }
+
+    public void updateNull(String columnLabel) throws SQLException {
+        resultSet.updateNull(columnLabel);
+    }
+
+    public void updateBoolean(int columnIndex, boolean x) throws SQLException {
+        resultSet.updateBoolean(columnIndex, x);
+    }
+
+    public void updateBoolean(String columnLabel, boolean x) throws SQLException {
+        resultSet.updateBoolean(columnLabel, x);
+    }
+
+    public void updateByte(int columnIndex, byte x) throws SQLException {
+        resultSet.updateByte(columnIndex, x);
+    }
+
+    public void updateByte(String columnLabel, byte x) throws SQLException {
+        resultSet.updateByte(columnLabel, x);
+    }
+
+    public void updateBytes(int columnIndex, byte[] x) throws SQLException {
+        resultSet.updateBytes(columnIndex, x);
+    }
+
+    public void updateBytes(String columnLabel, byte[] x) throws SQLException {
+        resultSet.updateBytes(columnLabel, x);
+    }
+
+    public void updateShort(int columnIndex, short x) throws SQLException {
+        resultSet.updateShort(columnIndex, x);
+    }
+
+    public void updateShort(String columnLabel, short x) throws SQLException {
+        resultSet.updateShort(columnLabel, x);
+    }
+
+    public void updateInt(int columnIndex, int x) throws SQLException {
+        resultSet.updateInt(columnIndex, x);
+    }
+
+    public void updateInt(String columnLabel, int x) throws SQLException {
+        resultSet.updateInt(columnLabel, x);
+    }
+
+    public void updateLong(int columnIndex, long x) throws SQLException {
+        resultSet.updateLong(columnIndex, x);
+    }
+
+    public void updateLong(String columnLabel, long x) throws SQLException {
+        resultSet.updateLong(columnLabel, x);
+    }
+
+    public void updateFloat(int columnIndex, float x) throws SQLException {
+        resultSet.updateFloat(columnIndex, x);
+    }
+
+    public void updateFloat(String columnLabel, float x) throws SQLException {
+        resultSet.updateFloat(columnLabel, x);
+    }
+
+    public void updateDouble(int columnIndex, double x) throws SQLException {
+        resultSet.updateDouble(columnIndex, x);
+    }
+
+    public void updateDouble(String columnLabel, double x) throws SQLException {
+        resultSet.updateDouble(columnLabel, x);
+    }
+
+    public void updateBigDecimal(int columnIndex, BigDecimal x) throws SQLException {
+        resultSet.updateBigDecimal(columnIndex, x);
+    }
+
+    public void updateBigDecimal(String columnLabel, BigDecimal x) throws SQLException {
+        resultSet.updateBigDecimal(columnLabel, x);
+    }
+
+    public void updateString(int columnIndex, String x) throws SQLException {
+        resultSet.updateString(columnIndex, x);
+    }
+
+    public void updateString(String columnLabel, String x) throws SQLException {
+        resultSet.updateString(columnLabel, x);
+    }
+
+    public void updateDate(int columnIndex, Date x) throws SQLException {
+        resultSet.updateDate(columnIndex, x);
+    }
+
+    public void updateDate(String columnLabel, Date x) throws SQLException {
+        resultSet.updateDate(columnLabel, x);
+    }
+
+    public void updateTime(int columnIndex, Time x) throws SQLException {
+        resultSet.updateTime(columnIndex, x);
+    }
+
+    public void updateTime(String columnLabel, Time x) throws SQLException {
+        resultSet.updateTime(columnLabel, x);
+    }
+
+    public void updateTimestamp(int columnIndex, Timestamp x) throws SQLException {
+        resultSet.updateTimestamp(columnIndex, x);
+    }
+
+    public void updateTimestamp(String columnLabel, Timestamp x) throws SQLException {
+        resultSet.updateTimestamp(columnLabel, x);
+    }
+
+    public void updateAsciiStream(int columnIndex, InputStream x, int length) throws SQLException {
+        resultSet.updateAsciiStream(columnIndex, x, length);
+    }
+
+    public void updateAsciiStream(int columnIndex, InputStream x) throws SQLException {
+        resultSet.updateAsciiStream(columnIndex, x);
+    }
+
+    public void updateAsciiStream(int columnIndex, InputStream x, long length) throws SQLException {
+        resultSet.updateAsciiStream(columnIndex, x, length);
+    }
+
+    public void updateAsciiStream(String columnLabel, InputStream x, int length) throws SQLException {
+        resultSet.updateAsciiStream(columnLabel, x, length);
+    }
+
+    public void updateAsciiStream(String columnLabel, InputStream x) throws SQLException {
+        resultSet.updateAsciiStream(columnLabel, x);
+    }
+
+    public void updateAsciiStream(String columnLabel, InputStream x, long length) throws SQLException {
+        resultSet.updateAsciiStream(columnLabel, x, length);
+    }
+
+    public void updateBinaryStream(int columnIndex, InputStream x, int length) throws SQLException {
+        resultSet.updateBinaryStream(columnIndex, x, length);
+    }
+
+    public void updateBinaryStream(int columnIndex, InputStream x) throws SQLException {
+        resultSet.updateBinaryStream(columnIndex, x);
+    }
+
+    public void updateBinaryStream(int columnIndex, InputStream x, long length) throws SQLException {
+        resultSet.updateBinaryStream(columnIndex, x, length);
+    }
+
+    public void updateBinaryStream(String columnLabel, InputStream x) throws SQLException {
+        resultSet.updateBinaryStream(columnLabel, x);
+    }
+
+    public void updateBinaryStream(String columnLabel, InputStream x, int length) throws SQLException {
+        resultSet.updateBinaryStream(columnLabel, x, length);
+    }
+
+    public void updateBinaryStream(String columnLabel, InputStream x, long length) throws SQLException {
+        resultSet.updateBinaryStream(columnLabel, x, length);
+    }
+
+    public void updateCharacterStream(int columnIndex, Reader x, long length) throws SQLException {
+        resultSet.updateCharacterStream(columnIndex, x, length);
+    }
+
+    public void updateCharacterStream(int columnIndex, Reader x, int length) throws SQLException {
+        resultSet.updateCharacterStream(columnIndex, x, length);
+    }
+
+    public void updateCharacterStream(int columnIndex, Reader x) throws SQLException {
+        resultSet.updateCharacterStream(columnIndex, x);
+    }
+
+    public void updateCharacterStream(String columnLabel, Reader x, int length) throws SQLException {
+        resultSet.updateCharacterStream(columnLabel, x, length);
+    }
+
+    public void updateCharacterStream(String columnLabel, Reader x) throws SQLException {
+        resultSet.updateCharacterStream(columnLabel, x);
+    }
+
+    public void updateCharacterStream(String columnLabel, Reader x, long length) throws SQLException {
+        resultSet.updateCharacterStream(columnLabel, x, length);
+    }
+
+    public void updateObject(int columnIndex, Object x, int scale) throws SQLException {
+        resultSet.updateObject(columnIndex, x, scale);
+    }
+
+    public void updateObject(String columnLabel, Object x, int scale) throws SQLException {
+        resultSet.updateObject(columnLabel, x, scale);
+    }
+
+    public void updateObject(int columnIndex, Object x) throws SQLException {
+        resultSet.updateObject(columnIndex, x);
+    }
+
+    public void updateObject(String columnLabel, Object x) throws SQLException {
+        resultSet.updateObject(columnLabel, x);
+    }
+
+    public void updateRef(int columnIndex, Ref x) throws SQLException {
+        resultSet.updateRef(columnIndex, x);
+    }
+
+    public void updateRef(String columnLabel, Ref x) throws SQLException {
+        resultSet.updateRef(columnLabel, x);
+    }
+
+    public void updateBlob(int columnIndex, InputStream x) throws SQLException {
+        resultSet.updateBlob(columnIndex, x);
+    }
+
+    public void updateBlob(int columnIndex, InputStream x, long length) throws SQLException {
+        resultSet.updateBlob(columnIndex, x, length);
+    }
+
+    public void updateBlob(int columnIndex, Blob x) throws SQLException {
+        resultSet.updateBlob(columnIndex, x);
+    }
+
+    public void updateBlob(String columnLabel, Blob x) throws SQLException {
+        resultSet.updateBlob(columnLabel, x);
+    }
+
+    public void updateBlob(String columnLabel, InputStream x) throws SQLException {
+        resultSet.updateBlob(columnLabel, x);
+    }
+
+    public void updateBlob(String columnLabel, InputStream x, long length) throws SQLException {
+        resultSet.updateBlob(columnLabel, x, length);
+    }
+
+    public void updateClob(int columnIndex, Clob x) throws SQLException {
+        resultSet.updateClob(columnIndex, x);
+    }
+
+    public void updateClob(int columnIndex, Reader x) throws SQLException {
+        resultSet.updateClob(columnIndex, x);
+    }
+
+    public void updateClob(int columnIndex, Reader x, long length) throws SQLException {
+        resultSet.updateClob(columnIndex, x, length);
+    }
+
+    public void updateClob(String columnLabel, Clob x) throws SQLException {
+        resultSet.updateClob(columnLabel, x);
+    }
+
+    public void updateClob(String columnLabel, Reader x) throws SQLException {
+        resultSet.updateClob(columnLabel, x);
+    }
+
+    public void updateClob(String columnLabel, Reader x, long length) throws SQLException {
+        resultSet.updateClob(columnLabel, x, length);
+    }
+
+    public void updateArray(int columnIndex, Array x) throws SQLException {
+        resultSet.updateArray(columnIndex, x);
+    }
+
+    public void updateArray(String columnLabel, Array x) throws SQLException {
+        resultSet.updateArray(columnLabel, x);
+    }
+
+    public String getCursorName() throws SQLException {
+        return resultSet.getCursorName();
+    }
+
+    public int getRow() throws SQLException {
+        return resultSet.getRow();
+    }
+
+    public int getConcurrency() throws SQLException {
+        return resultSet.getConcurrency();
+    }
+
+    public int getFetchDirection() throws SQLException {
+        return resultSet.getFetchDirection();
+    }
+
+    public int getFetchSize() throws SQLException {
+        return resultSet.getFetchSize();
+    }
+
+    public void setFetchSize(int rows) throws SQLException {
+        resultSet.setFetchSize(rows);
+    }
+
+    public void setFetchDirection(int direction) throws SQLException {
+        resultSet.setFetchDirection(direction);
+    }
+
+    public int getType() throws SQLException {
+        return resultSet.getType();
+    }
+
+    public boolean isBeforeFirst() throws SQLException {
+        return resultSet.isBeforeFirst();
+    }
+
+    public boolean isAfterLast() throws SQLException {
+        return resultSet.isAfterLast();
+    }
+
+    public boolean isFirst() throws SQLException {
+        return resultSet.isFirst();
+    }
+
+    public boolean isLast() throws SQLException {
+        return resultSet.isLast();
+    }
+
+    public void beforeFirst() throws SQLException {
+        resultSet.beforeFirst();
+    }
+
+    public void afterLast() throws SQLException {
+        resultSet.afterLast();
+    }
+
+    public boolean first() throws SQLException {
+        return resultSet.first();
+    }
+
+    public boolean last() throws SQLException {
+        return resultSet.last();
+    }
+
+    public boolean absolute(int rowNumber) throws SQLException {
+        return resultSet.absolute(rowNumber);
+    }
+
+    public boolean relative(int rowCount) throws SQLException {
+        return resultSet.relative(rowCount);
+    }
+
+    public boolean previous() throws SQLException {
+        return resultSet.previous();
+    }
+
+    public void moveToInsertRow() throws SQLException {
+        resultSet.moveToInsertRow();
+    }
+
+    public void moveToCurrentRow() throws SQLException {
+        resultSet.moveToCurrentRow();
+    }
+
+    public boolean rowUpdated() throws SQLException {
+        return resultSet.rowUpdated();
+    }
+
+    public boolean rowInserted() throws SQLException {
+        return resultSet.rowInserted();
+    }
+
+    public boolean rowDeleted() throws SQLException {
+        return resultSet.rowDeleted();
+    }
+
+    public void insertRow() throws SQLException {
+        resultSet.insertRow();
+    }
+
+    public void updateRow() throws SQLException {
+        resultSet.updateRow();
+    }
+
+    public void deleteRow() throws SQLException {
+        resultSet.deleteRow();
+    }
+
+    public void refreshRow() throws SQLException {
+        resultSet.refreshRow();
+    }
+
+    public void cancelRowUpdates() throws SQLException {
+        resultSet.cancelRowUpdates();
+    }
+
+    public Value get(int columnIndex) {
+        return resultSet.get(columnIndex);
+    }
+
+    public RowId getRowId(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getRowId(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public RowId getRowId(String columnLabel) throws SQLException {
+        return resultSet.getRowId(columnLabel);
+    }
+
+    public void updateRowId(int columnIndex, RowId x) throws SQLException {
+        resultSet.updateRowId(columnIndex, x);
+    }
+
+    public void updateRowId(String columnLabel, RowId x) throws SQLException {
+        resultSet.updateRowId(columnLabel, x);
+    }
+
+    public int getHoldability() throws SQLException {
+        return resultSet.getHoldability();
+    }
+
+    public boolean isClosed() throws SQLException {
+        return resultSet.isClosed();
+    }
+
+    public void updateNString(int columnIndex, String x) throws SQLException {
+        resultSet.updateNString(columnIndex, x);
+    }
+
+    public void updateNString(String columnLabel, String x) throws SQLException {
+        resultSet.updateNString(columnLabel, x);
+    }
+
+    public void updateNClob(int columnIndex, NClob x) throws SQLException {
+        resultSet.updateNClob(columnIndex, x);
+    }
+
+    public void updateNClob(int columnIndex, Reader x) throws SQLException {
+        resultSet.updateNClob(columnIndex, x);
+    }
+
+    public void updateNClob(int columnIndex, Reader x, long length) throws SQLException {
+        resultSet.updateNClob(columnIndex, x, length);
+    }
+
+    public void updateNClob(String columnLabel, Reader x) throws SQLException {
+        resultSet.updateNClob(columnLabel, x);
+    }
+
+    public void updateNClob(String columnLabel, Reader x, long length) throws SQLException {
+        resultSet.updateNClob(columnLabel, x, length);
+    }
+
+    public void updateNClob(String columnLabel, NClob x) throws SQLException {
+        resultSet.updateNClob(columnLabel, x);
+    }
+
+    public NClob getNClob(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getNClob(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public NClob getNClob(String columnLabel) throws SQLException {
+        return resultSet.getNClob(columnLabel);
+    }
+
+    public SQLXML getSQLXML(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getSQLXML(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public SQLXML getSQLXML(String columnLabel) throws SQLException {
+        return resultSet.getSQLXML(columnLabel);
+    }
+
+    public void updateSQLXML(int columnIndex, SQLXML xmlObject) throws SQLException {
+        resultSet.updateSQLXML(columnIndex, xmlObject);
+    }
+
+    public void updateSQLXML(String columnLabel, SQLXML xmlObject) throws SQLException {
+        resultSet.updateSQLXML(columnLabel, xmlObject);
+    }
+
+    public String getNString(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getNString(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public String getNString(String columnLabel) throws SQLException {
+        return resultSet.getNString(columnLabel);
+    }
+
+    public Reader getNCharacterStream(int columnIndex) throws SQLException {
+        before();
+        try {
+            return resultSet.getNCharacterStream(columnIndex - offset);
+        } finally {
+            after();
+        }
+    }
+
+    public Reader getNCharacterStream(String columnLabel) throws SQLException {
+        return resultSet.getNCharacterStream(columnLabel);
+    }
+
+    public void updateNCharacterStream(int columnIndex, Reader x) throws SQLException {
+        resultSet.updateNCharacterStream(columnIndex, x);
+    }
+
+    public void updateNCharacterStream(int columnIndex, Reader x, long length) throws SQLException {
+        resultSet.updateNCharacterStream(columnIndex, x, length);
+    }
+
+    public void updateNCharacterStream(String columnLabel, Reader x) throws SQLException {
+        resultSet.updateNCharacterStream(columnLabel, x);
+    }
+
+    public void updateNCharacterStream(String columnLabel, Reader x, long length) throws SQLException {
+        resultSet.updateNCharacterStream(columnLabel, x, length);
+    }
+
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        return resultSet.unwrap(iface);
+    }
+
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return resultSet.isWrapperFor(iface);
+    }
+
+    public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+        before();
+        try {
+            return resultSet.getObject(columnIndex - offset, type);
+        } finally {
+            after();
+        }
+    }
+
+    public <T> T getObject(String columnName, Class<T> type) throws SQLException {
+        return resultSet.getObject(columnName, type);
+    }
+
+    public String toString() {
+        return resultSet.toString();
+    }
+
+    public void updateObject(int columnIndex, Object x, SQLType targetSqlType, int scaleOrLength)
+            throws SQLException {
+        resultSet.updateObject(columnIndex, x, targetSqlType, scaleOrLength);
+    }
+
+    public void updateObject(String columnLabel, Object x, SQLType targetSqlType, int scaleOrLength)
+            throws SQLException {
+        resultSet.updateObject(columnLabel, x, targetSqlType, scaleOrLength);
+    }
+
+    public void updateObject(int columnIndex, Object x, SQLType targetSqlType) throws SQLException {
+        resultSet.updateObject(columnIndex, x, targetSqlType);
+    }
+
+    public void updateObject(String columnLabel, Object x, SQLType targetSqlType) throws SQLException {
+        resultSet.updateObject(columnLabel, x, targetSqlType);
+    }
+    
+    private void before() throws SQLException {
+        rowNumberCp = resultSetProvider.getRowId();
+        resultSetProvider.reset();
+        resultSetProvider.next();
+    }
+    
+    private void after() throws SQLException {
+        resultSetProvider.reset();
+        for (int i=0; i<=rowNumberCp; i++) {
+            resultSetProvider.next();
+        }
+    }
+    
+}
