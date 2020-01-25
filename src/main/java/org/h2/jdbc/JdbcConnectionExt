@@ -1,0 +1,56 @@
+package org.h2.jdbc;
+
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Properties;
+
+import org.h2.command.CommandInterface;
+import org.h2.engine.ConnectionInfo;
+import org.h2.engine.Constants;
+import org.h2.engine.SessionInterface;
+import org.h2.message.TraceObject;
+
+public class JdbcConnectionExt extends JdbcConnection {
+    
+    public JdbcConnectionExt(String url, Properties info) throws SQLException {
+        super(url, info);
+    }
+
+    public JdbcConnectionExt(ConnectionInfo ci, boolean useBaseDir) throws SQLException {
+        super(ci, useBaseDir);
+    }
+
+    public JdbcConnectionExt(JdbcConnection clone) {
+        super(clone);
+    }
+
+    public JdbcConnectionExt(SessionInterface session, String user, String url) {
+        super(session, user, url);
+    }
+    
+    @Override
+    public CallableStatement prepareCall(String sql) throws SQLException {
+        try {
+            int id = getNextId(TraceObject.CALLABLE_STATEMENT);
+            if (isDebugEnabled()) {
+                debugCodeAssign("CallableStatement",
+                        TraceObject.CALLABLE_STATEMENT, id,
+                        "prepareCall(" + quote(sql) + ")");
+            }
+            checkClosed();
+            sql = translateSQL(sql, true);
+            return new JdbcCallableStatementExt(this, sql, id,
+                    ResultSet.TYPE_FORWARD_ONLY,
+                    Constants.DEFAULT_RESULT_SET_CONCURRENCY);
+        } catch (Exception e) {
+            throw logAndConvert(e);
+        }
+    }
+    
+    
+    @Override
+    CommandInterface prepareCommand(String sql, int fetchSize) {
+        return new CommandInterfaceExt(super.prepareCommand(sql, fetchSize));
+    }
+}
