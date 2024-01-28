@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-@Library('enlibs@master')_
+@Library('enlibs@main')_
 
 pipeline {
     stages {
